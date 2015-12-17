@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Capture Audio</title>
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="json2.js"></script>
+    <script type="text/javascript" charset="utf-8">
+	var global = {};
+	document.addEventListener("deviceready", onDeviceReady, false);
+
+    // Cordova is ready
+    //
+    function onDeviceReady() {
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+    }
+
+    function gotFS(fileSystem) {
+		fileSystem.root.getFile("bijay.mp3", {create: true, exclusive: false}, gotFileEntry, fail);
+    }
+	function fail(error) {
+        console.log(error.code);
+    }
+	 function gotFileEntry(fileEntry) {
+        fileEntry.createWriter(gotFileWriter, fail);
+    }
+	  function gotFileWriter(writer) {
+		global.writer = writer;
+        
+        writer.write("some sample text");
+    }
+
+
+    // Called when capture operation is finished
+    //
+    function captureSuccess(mediaFiles) {
+        var success = function(message) {
+            alert(message);
+        }
+
+        var failure = function() {
+            alert("Error calling Hello Plugin");
+        }
+        var i, len;
+        for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+			hello.greet(mediaFiles[i], success, failure);
+            //uploadFile(mediaFiles[i]);
+        }    
+    }
+
+    // Called if something bad happens.
+    // 
+    function captureError(error) {
+        var msg = 'An error occurred during capture: ' + error.code;
+        navigator.notification.alert(msg, null, 'Uh oh!');
+    }
+
+    // A button will call this function
+    //
+    function captureAudio() {
+        // Launch device audio recording application, 
+        // allowing user to capture up to 2 audio clips
+        navigator.device.capture.captureAudio(captureSuccess, captureError, {limit: 2});
+    }
+
+    // Upload files to server
+    function uploadFile(mediaFile) {
+        var ft = new FileTransfer(),
+            path = mediaFile.fullPath,
+            name = mediaFile.name;
+
+        ft.upload(path,
+            "localhost:8084/convertAudioToText",
+            function(result) {
+                console.log('Upload success: ' + result.responseCode);
+                console.log(result.bytesSent + ' bytes sent');
+            },
+            function(error) {
+                console.log('Error uploading file ' + path + ': ' + error.code);
+            },
+            { fileName: name });   
+    }
+	function alertHello() {
+		var success = function(message) {
+			alert(message);
+		}
+
+		var failure = function() {
+			alert("Error calling Hello Plugin");
+		}
+
+		hello.greet("love india", success, failure);
+	}
+ 
+    </script>
+    </head>
+    <body>
+        <button onclick="captureAudio();">Capture Audio</button> <br>
+		 <button onclick="alertHello();">alert Hello Using own Plugin</button> <br>
+		<script type="text/javascript" src="js/index.js"></script>
+    </body>
+</html>
