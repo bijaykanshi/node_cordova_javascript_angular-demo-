@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<body>
+
+
+		<textarea id="textArea"></textarea><br/><br/>
+
+		<button type="button" onclick="textToSpeech.convertTextToAudio()">Convert Text To Audio</button><br/><br/>
+		<audio id = 'audio' class="audio" controls></audio>
+
+		<script>
+		var recognizer = new SpeechRecognizer({
+		  ws: '',
+		  model: 'WatsonModel'
+		});
+		 
+		recognizer.onresult = function(data) {
+		 
+		    //get the transcript from the service result data
+		    var result = data.results[data.results.length-1];
+		    var transcript = result.alternatives[0].transcript;
+		 
+		    // do something with the transcript
+		    search( transcript, result.final );
+		}
+		var textToSpeech = {
+			convertTextToAudio: function () {
+				var text = document.getElementById('textArea').value,
+					audio = document.getElementById('audio'),
+					downloadURL = '/convertTextToAudio' +  '?voice=en-US_AllisonVoice'+ '&text=' + encodeURIComponent(text) + '&X-WDC-PL-OPT-OUT=0';
+				audio.pause();
+				audio.src = downloadURL;
+			    audio.play();
+			    return true;
+			}
+		}
+		</script>
+
+	</body>
+</html>
