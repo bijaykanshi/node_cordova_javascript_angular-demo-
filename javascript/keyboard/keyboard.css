@@ -1,0 +1,30 @@
+.basicButton {
+    width: calc(8.87% - 1.3%)!important;
+    float: left;
+    margin-right: 1.3%;
+    margin-top: 1.3%;
+    cursor: pointer;
+    border-radius: 15px;
+    font-size: 2.7em;
+}
+@media only screen and (max-width: 500px) {
+    body {
+        background-color: lightblue;
+    }
+}
+#keyboardCapitalLetter
+{
+	  
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+.button_space {
+	width: 501px !important;
+    height: 55px;
+    margin-top: 20px;
+    margin-left: 399px;
+}
+.secondRow {
+	    margin-left: 229px;
+}
